@@ -1,0 +1,21 @@
+#lang racket
+
+;; empty list null  or '()
+;; cons constructor
+;; head of list car
+;; tail of list cdr
+;; check por empty null?
+
+;; (list e1 ... en) for building lists
+
+; sum all the numbers in a list
+(define (sum xs)
+  (if (null? xs)
+      0
+    (+ (car xs) (sum (cdr xs)))))
+
+; append
+(define (my-append xs ys)
+  (if (null? xs)
+      ys
+      (cons (car xs) (my-append (cdr xs) ys))))

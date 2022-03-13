@@ -1,0 +1,16 @@
+#lang racket
+
+
+(define (my-delay th)
+  (mcons #f th))
+
+;;promise
+(define (my-force p)
+  (if (mcar p)
+      (mcdr p)
+      (begin (set-mcar! p #t)
+             (set-mcdr! p ((mcdr p)))
+             (mcdr p))))
+
+(my-mult x (let ([x (my-delay (lambda () (slow-add 3 4)))])
+               (lambda () (my-force p))))
