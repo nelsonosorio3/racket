@@ -55,4 +55,23 @@
                                                             ys2))))))])
            (lambda () (f xs ys))))
 
- (stream-for-n-steps (cycle-lists (list 1 2 3) (list "a" "b")) 10)
+(define (vector-assoc v vec)
+  (letrec (
+           [f (lambda (n)
+                (cond [(= (vector-length vec) n) #f]
+                      [(not (pair? (vector-ref vec n))) (f (+ n 1))]
+                      [(equal? (car (vector-ref vec n)) v) (vector-ref vec n)]
+                      [#t (f (+ n 1))]))])
+    (f 0)))
+
+(define (cached-assoc xs n)
+  (let ([memo (make-vector n #f)]
+        [next 0])
+    (lambda (v) (or (vector-assoc v memo)(let ([ans (assoc v xs)])
+            (and ans
+                 (begin (vector-set! memo next ans)
+                        (set! next
+                              (if (= (+ next 1) n)
+                                  0
+                                  (+ next 1)))
+                        ans)))))))
